@@ -1,39 +1,23 @@
-# Real Photos — Drop-In Guide
+# Vehicle Imagery — Current State
 
-This site currently uses styled placeholder boxes (dashed border, camera icon, "Photo coming soon") instead of real photos, so nothing fake or stock is shown. When real Everflow photos are ready, add them here and swap each placeholder for a real `<img>` tag inside its existing `.photo-frame` wrapper — the layout, sizing, and responsive behavior are already built to accept a photo with no other changes needed.
+The site currently uses no photographs or illustrations anywhere. Every section that once held vehicle/delivery imagery has been redesigned as a text/UI-only panel (dark navy `panel-card` with orange accents and stat highlights), per the owner's decision to keep the site fully photo-free for now.
 
-## Expected files
+There is one image file in this folder, currently unused by any page:
 
-| File to add here | Used on | Suggested shape |
-|---|---|---|
-| `hero-vehicle.jpg` | Homepage hero | 4:3 (e.g. 1200×900) |
-| `about-owner.jpg` | About page | 4:3 (e.g. 1200×900) |
-| `services-handoff.jpg` | Services page (banner under the page hero) | wide, ~21:8 on desktop (e.g. 2000×760) — falls back to 4:3 on mobile automatically |
-| `recurring-cargo.jpg` | Recurring Routes page | 4:3 (e.g. 1200×900) |
-| `philadelphia-area.jpg` | Industries page hero | 1:1 (e.g. 1000×1000) |
+**`cr-v-delivery-vehicle.webp`** (1024×768, WebP, ~78KB) — a real photo of the black 2019 Honda CR-V EX-L used for Everflow deliveries.
 
-Any reasonably sharp, well-lit photo close to these proportions will work — the frame crops to fit (`object-fit: cover`), so exact pixel dimensions don't need to be perfect.
+## Adding a real photo later
 
-## How to swap one in
-
-Each placeholder looks like this in the HTML:
+If the owner decides to reintroduce photography, the simplest approach is a standard `<img>` dropped into a relevant section (e.g. next to a `panel-card`), sized responsively:
 
 ```html
-<div class="photo-frame">
-  <div class="photo-placeholder">
-    <svg class="cam-ic" ...></svg>
-    <strong>Photo coming soon</strong>
-    <span>Everflow delivery vehicle</span>
-  </div>
-</div>
+<img src="images/cr-v-delivery-vehicle.webp"
+     alt="Black Honda CR-V representing Everflow Logistics delivery service in Philadelphia"
+     width="1024" height="768" loading="lazy"
+     style="width:100%;height:auto;border-radius:var(--radius-lg);">
 ```
 
-Replace the `.photo-placeholder` div with an `<img>`, keeping the `.photo-frame` wrapper:
-
-```html
-<div class="photo-frame">
-  <img src="images/hero-vehicle.jpg" alt="Everflow Logistics delivery vehicle in Philadelphia">
-</div>
-```
-
-That's it — no CSS or layout changes needed. Write a real, descriptive `alt` text each time (what's actually in the photo), since that also helps search engines and screen-reader users.
+- Use `loading="lazy"` on everything except a page's own hero image (load that one eagerly, with `fetchpriority="high"`).
+- Prefer `.webp` for file size.
+- Write a real, specific `alt` for each photo — don't reuse the same alt text everywhere.
+- Match the `width`/`height` attributes to the actual file dimensions (prevents layout shift on load).

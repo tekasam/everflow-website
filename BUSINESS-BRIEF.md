@@ -152,7 +152,9 @@ Avoid looking like:
 - A gig-driver profile
 - An overly flashy startup landing page
 
-Imagery should be consistent with local courier/business delivery — never imagery implying Everflow owns vehicles, vans, or facilities it does not own. (Note: current site build uses no photography, only abstract SVG/CSS graphics — revisit this against the "local courier" feel once real direction is set.)
+Imagery should be consistent with local courier/business delivery — never imagery implying Everflow owns vehicles, vans, or facilities it does not own.
+
+**Vehicle:** the delivery vehicle is a black 2019 Honda CR-V EX-L. The site currently uses stylized SVG illustrations of this vehicle (not photos) at 5 locations — homepage hero, Services, Business Solutions, About, Service Area — built specifically so they can never be mistaken for real photos. No image-generation or stock-photo tool is available in this project, and even if one were, generating/sourcing a photo and presenting it as "the Everflow vehicle" would violate this project's own accuracy rules — so photos were never fabricated. When real photos of the actual CR-V exist, swap them in per `images/README.md`. Never depict a newer-generation CR-V or a different SUV, and never show/imply commercial equipment, refrigeration, cargo branding/decals, or certifications on the vehicle that haven't been confirmed. No owner photo is required or used — the vehicle is the primary visual representation of the business.
 
 ## Growth Strategy
 
