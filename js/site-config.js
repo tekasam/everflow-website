@@ -17,6 +17,55 @@ window.EVERFLOW_CONFIG = {
   formEndpoint: "https://formspree.io/f/xkjngdde",
 };
 
+// Production SEO helpers shared across all pages.
+(function configureProductionSeo() {
+  const baseUrl = "https://everflowdelivery.com";
+  const path = window.location.pathname === "/index.html" ? "/" : window.location.pathname;
+  const canonicalUrl = `${baseUrl}${path}`;
+
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    document.head.appendChild(canonical);
+  }
+  canonical.href = canonicalUrl;
+
+  let ogUrl = document.querySelector('meta[property="og:url"]');
+  if (!ogUrl) {
+    ogUrl = document.createElement("meta");
+    ogUrl.setAttribute("property", "og:url");
+    document.head.appendChild(ogUrl);
+  }
+  ogUrl.setAttribute("content", canonicalUrl);
+
+  if (!document.querySelector('script[data-everflow-schema="local-business"]')) {
+    const schema = document.createElement("script");
+    schema.type = "application/ld+json";
+    schema.dataset.everflowSchema = "local-business";
+    schema.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      name: window.EVERFLOW_CONFIG.businessName,
+      url: baseUrl,
+      telephone: window.EVERFLOW_CONFIG.phoneE164,
+      email: window.EVERFLOW_CONFIG.email,
+      description: window.EVERFLOW_CONFIG.shortDescription,
+      areaServed: [
+        { "@type": "City", name: "Philadelphia" },
+        { "@type": "AdministrativeArea", name: "Philadelphia suburbs" }
+      ],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Philadelphia",
+        addressRegion: "PA",
+        addressCountry: "US"
+      }
+    });
+    document.head.appendChild(schema);
+  }
+})();
+
 // Quote-form requirements.
 // Pickup address, delivery address, service type, delivery frequency, and preferred date
 // are essential to quoting and scheduling a delivery, so they are required.
