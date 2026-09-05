@@ -18,7 +18,7 @@ window.EVERFLOW_CONFIG = {
 };
 
 // Quote-form requirements.
-// Pickup address, delivery address, delivery frequency, and preferred date
+// Pickup address, delivery address, service type, delivery frequency, and preferred date
 // are essential to quoting and scheduling a delivery, so they are required.
 (function configureQuoteFormRequirements() {
   const form = document.getElementById("contact-form");
@@ -26,6 +26,7 @@ window.EVERFLOW_CONFIG = {
 
   const pickup = document.getElementById("pickup");
   const dropoff = document.getElementById("dropoff");
+  const serviceType = document.getElementById("service-type");
   const frequency = document.getElementById("delivery-frequency");
   const preferredDate = document.getElementById("pickup-time");
 
@@ -37,6 +38,7 @@ window.EVERFLOW_CONFIG = {
 
   makeRequired(pickup);
   makeRequired(dropoff);
+  makeRequired(serviceType);
   makeRequired(frequency);
   makeRequired(preferredDate);
 
@@ -69,6 +71,7 @@ window.EVERFLOW_CONFIG = {
 
   updateLabel("pickup", "Exact Pickup Address");
   updateLabel("dropoff", "Exact Delivery Address");
+  updateLabel("service-type", "Service Needed");
   updateLabel("delivery-frequency", "One-Time or Recurring Delivery");
   updateLabel("pickup-time", "Preferred Date");
 })();
