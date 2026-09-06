@@ -66,12 +66,40 @@ window.EVERFLOW_CONFIG = {
   }
 })();
 
-// Quote-form requirements.
+// Add a consistent Privacy Policy link to every page footer.
+(function configurePrivacyLink() {
+  const footerBottom = document.querySelector('.footer-bottom');
+  if (!footerBottom || footerBottom.querySelector('a[href="privacy-policy.html"]')) return;
+  const link = document.createElement('a');
+  link.href = 'privacy-policy.html';
+  link.textContent = 'Privacy Policy';
+  link.style.marginLeft = '12px';
+  footerBottom.appendChild(link);
+})();
+
+// Quote-form requirements and basic bot protection.
 // Pickup address, delivery address, service type, delivery frequency, and preferred date
 // are essential to quoting and scheduling a delivery, so they are required.
 (function configureQuoteFormRequirements() {
   const form = document.getElementById("contact-form");
   if (!form) return;
+
+  // Formspree-supported honeypot. Human visitors never see or fill this field;
+  // automated bots that populate it are silently filtered by Formspree.
+  if (!form.querySelector('input[name="_gotcha"]')) {
+    const honeypot = document.createElement('input');
+    honeypot.type = 'text';
+    honeypot.name = '_gotcha';
+    honeypot.tabIndex = -1;
+    honeypot.autocomplete = 'off';
+    honeypot.setAttribute('aria-hidden', 'true');
+    honeypot.style.position = 'absolute';
+    honeypot.style.left = '-9999px';
+    honeypot.style.width = '1px';
+    honeypot.style.height = '1px';
+    honeypot.style.opacity = '0';
+    form.prepend(honeypot);
+  }
 
   const pickup = document.getElementById("pickup");
   const dropoff = document.getElementById("dropoff");
