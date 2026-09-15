@@ -290,6 +290,8 @@ section { position: relative; }
 
 .hero-trust { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .hero-trust span { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+.hero-trust > a { white-space: nowrap; }
+.hero-trust > a svg { width: 28px; height: 28px; flex-shrink: 0; }
 .hero-trust .logos { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
 .hero-trust .logos b { font-family: var(--font-head); color: rgba(255,255,255,0.65); font-size: 1rem; font-weight: 700; }
 
