@@ -17,27 +17,10 @@ window.EVERFLOW_CONFIG = {
   formEndpoint: "https://formspree.io/f/xkjngdde",
 };
 
-// Production SEO helpers shared across all pages.
-(function configureProductionSeo() {
+// Confirmed LocalBusiness details shared across all pages. Canonical and social
+// URLs live in each page's HTML so search engines can read them without JavaScript.
+(function configureLocalBusinessSchema() {
   const baseUrl = "https://everflowdelivery.com";
-  const path = window.location.pathname === "/index.html" ? "/" : window.location.pathname;
-  const canonicalUrl = `${baseUrl}${path}`;
-
-  let canonical = document.querySelector('link[rel="canonical"]');
-  if (!canonical) {
-    canonical = document.createElement("link");
-    canonical.rel = "canonical";
-    document.head.appendChild(canonical);
-  }
-  canonical.href = canonicalUrl;
-
-  let ogUrl = document.querySelector('meta[property="og:url"]');
-  if (!ogUrl) {
-    ogUrl = document.createElement("meta");
-    ogUrl.setAttribute("property", "og:url");
-    document.head.appendChild(ogUrl);
-  }
-  ogUrl.setAttribute("content", canonicalUrl);
 
   if (!document.querySelector('script[data-everflow-schema="local-business"]')) {
     const schema = document.createElement("script");
@@ -121,12 +104,12 @@ window.EVERFLOW_CONFIG = {
 
   if (pickup) {
     pickup.placeholder = "Exact pickup address";
-    pickup.setAttribute("autocomplete", "street-address");
+    pickup.setAttribute("autocomplete", "section-pickup street-address");
   }
 
   if (dropoff) {
     dropoff.placeholder = "Exact delivery address";
-    dropoff.setAttribute("autocomplete", "street-address");
+    dropoff.setAttribute("autocomplete", "section-dropoff street-address");
   }
 
   if (preferredDate) {

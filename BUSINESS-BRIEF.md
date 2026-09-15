@@ -16,7 +16,8 @@ Confirmed by the owner. Anything still marked `[TBD]` or `[PLACEHOLDER]` has not
 - Legal/document delivery: business document courier only. Never imply formal, licensed process-server delivery of legal summons or subpoenas — that is a separate regulated service Everflow does not offer.
 - Logo/branding: no real logo yet — site uses a placeholder mark/wordmark.
 - Pricing: custom quotes only, no published rate structure.
-- Hosting: not yet decided. Quote-form solution must work regardless of eventual host.
+- Hosting: GitHub Pages at https://everflowdelivery.com. The repository's `main` branch publishes the live site.
+- Quote form: Formspree is configured in `js/site-config.js`, with a mailto fallback if the service is unavailable.
 
 ## Company
 
@@ -125,21 +126,21 @@ Tell the real story: a growing local logistics business built around dependable 
 
 ### Request a Delivery / Get a Business Quote (`contact.html`)
 Lead-generation form. Fields:
-- Name
-- Company Name
-- Phone
-- Email
-- Pickup Location
-- Delivery Location
-- Service Needed (dropdown: Same-Day Delivery, Rush Delivery, Scheduled Route, Recurring Business Delivery, Medical Courier, Legal / Document Delivery, Auto Parts Delivery, Last-Mile / Overflow Delivery, Event / Trade Show Delivery, Other)
-- One-Time or Recurring Delivery
-- Preferred Date
-- Message / Delivery Details
-- Checkbox: "I'm interested in a recurring route or business partnership."
+- Name (required)
+- Company Name (optional)
+- Phone (required)
+- Email (required)
+- Exact Pickup Address (required)
+- Exact Delivery Address (required)
+- Service Needed (required dropdown: Same-Day Delivery, Rush Delivery, Scheduled Route, Recurring Business Delivery, Medical Courier, Legal / Document Delivery, Auto Parts Delivery, Last-Mile / Overflow Delivery, Event / Trade Show Delivery, Other)
+- One-Time or Recurring Delivery (required)
+- Preferred Date (required)
+- Message / Delivery Details (optional)
+- Checkbox: "I'm interested in a recurring route or business partnership." (optional)
 
 Avoid collecting sensitive information (e.g. patient/PHI details) unless and until Everflow has confirmed the compliance requirements to handle it.
 
-Contact info (phone/email) is shown directly on this page too. **Quote-form backend is not yet configured** — see Open Items below; the form honestly tells visitors this and offers a working mailto fallback rather than faking a success message.
+Contact info (phone/email) is shown directly on this page too. Formspree is configured as the form backend, and the site provides a working mailto fallback rather than showing a fake success state if submission fails.
 
 ## Design Direction
 
@@ -181,8 +182,8 @@ Accuracy is more important than making the company appear larger. When informati
 - [x] Business address / service-area boundary — no address published; service area described generally as Philadelphia + surrounding suburbs
 - [x] Hours of availability — no fixed hours; flexible scheduling by request
 - [x] Insurance and licensing details — none confirmed; not published
-- [x] Medical courier qualifications status — not yet qualified; mentioned only as future interest
+- [x] Medical courier qualifications status — scoped service for appropriate documents, general supplies, and equipment only; no specimen-transport certification, pharmaceutical licensing, or HIPAA-specific certification claimed
 - [x] Pricing/quote model — custom quotes only, no published rate structure
 - [ ] Any existing customer or contractor relationship willing to be referenced (no testimonials until real and permitted)
 - [x] Preferred contact method for quote requests — single combined form on the Contact/Quote page, with phone and email also displayed directly
-- [ ] Quote-form backend account (e.g. Formspree) — needs to be created under Everflowlogistics947@gmail.com; site is wired to accept the endpoint once created, see `js/site-config.js`
+- [x] Quote-form backend — Formspree configured in `js/site-config.js`, with email fallback

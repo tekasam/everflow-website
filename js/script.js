@@ -1,5 +1,8 @@
 // Everflow Logistics — site behavior
 
+// Progressive enhancement: content stays visible if JavaScript is unavailable.
+document.documentElement.classList.add('js');
+
 document.addEventListener('DOMContentLoaded', () => {
   const config = window.EVERFLOW_CONFIG || {};
 
@@ -16,29 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-config="email-href"]').forEach(el => {
     el.setAttribute('href', config.email ? `mailto:${config.email}` : '#');
   });
-
-  /* Structured data (LocalBusiness) — built from confirmed facts only,
-     single-sourced from site-config.js so it never drifts from the visible
-     phone/email shown on the page. */
-  if (config.businessName) {
-    const ld = {
-      '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
-      name: config.businessName,
-      description: config.shortDescription,
-      areaServed: {
-        '@type': 'Place',
-        name: config.areaServed,
-      },
-      url: window.location.href,
-    };
-    if (config.phoneE164) ld.telephone = config.phoneE164;
-    if (config.email) ld.email = config.email;
-    const ldScript = document.createElement('script');
-    ldScript.type = 'application/ld+json';
-    ldScript.textContent = JSON.stringify(ld);
-    document.head.appendChild(ldScript);
-  }
 
   /* Sticky header */
   const header = document.querySelector('.site-header');
@@ -60,11 +40,57 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileNav = document.querySelector('.mobile-nav');
   const mobileNavClose = document.querySelector('.mobile-nav-close');
   if (navToggle && mobileNav) {
-    navToggle.addEventListener('click', () => mobileNav.classList.add('open'));
-    mobileNavClose?.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.id = mobileNav.id || 'mobile-navigation';
+    mobileNav.setAttribute('role', 'dialog');
+    mobileNav.setAttribute('aria-modal', 'true');
+    mobileNav.setAttribute('aria-label', 'Mobile navigation');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    mobileNav.inert = true;
+    navToggle.setAttribute('aria-controls', mobileNav.id);
+    navToggle.setAttribute('aria-expanded', 'false');
+
+    const focusableSelector = 'a[href], button:not([disabled])';
+    const openMobileNav = () => {
+      mobileNav.inert = false;
+      mobileNav.classList.add('open');
+      mobileNav.setAttribute('aria-hidden', 'false');
+      navToggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('nav-open');
+      mobileNavClose?.focus();
+    };
+    const closeMobileNav = (restoreFocus = true) => {
+      mobileNav.classList.remove('open');
+      mobileNav.setAttribute('aria-hidden', 'true');
+      navToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
+      mobileNav.inert = true;
+      if (restoreFocus) navToggle.focus();
+    };
+
+    navToggle.addEventListener('click', openMobileNav);
+    mobileNavClose?.addEventListener('click', () => closeMobileNav());
     mobileNav.querySelectorAll('a').forEach(a =>
-      a.addEventListener('click', () => mobileNav.classList.remove('open'))
+      a.addEventListener('click', () => closeMobileNav(false))
     );
+    mobileNav.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMobileNav();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(mobileNav.querySelectorAll(focusableSelector));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
   }
 
   /* Back to top */
@@ -172,6 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
           if (response.ok) {
             successBox?.classList.add('show');
             contactForm.reset();
+            successBox?.setAttribute('tabindex', '-1');
+            successBox?.focus();
             successBox?.scrollIntoView({ behavior: 'smooth', block: 'center' });
           } else {
             throw new Error('Form service returned an error');
@@ -192,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (errorBox) {
             const mailtoLink = errorBox.querySelector('a[data-mailto-fallback]');
             if (mailtoLink) mailtoLink.href = buildMailtoFallback();
+            errorBox.setAttribute('role', 'alert');
             errorBox.classList.add('show');
             errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
@@ -229,7 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.main-nav a, .mobile-nav a').forEach(a => {
     const href = a.getAttribute('href').split('#')[0] || 'index.html';
-    if (href === path) a.classList.add('active');
+    if (href === path) {
+      a.classList.add('active');
+      a.setAttribute('aria-current', 'page');
+    }
   });
 
   /* Footer year */
