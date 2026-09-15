@@ -45,13 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileNav.setAttribute('aria-modal', 'true');
     mobileNav.setAttribute('aria-label', 'Mobile navigation');
     mobileNav.setAttribute('aria-hidden', 'true');
-    mobileNav.inert = true;
+    mobileNav.setAttribute('inert', '');
     navToggle.setAttribute('aria-controls', mobileNav.id);
     navToggle.setAttribute('aria-expanded', 'false');
 
     const focusableSelector = 'a[href], button:not([disabled])';
     const openMobileNav = () => {
-      mobileNav.inert = false;
+      mobileNav.removeAttribute('inert');
       mobileNav.classList.add('open');
       mobileNav.setAttribute('aria-hidden', 'false');
       navToggle.setAttribute('aria-expanded', 'true');
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mobileNav.setAttribute('aria-hidden', 'true');
       navToggle.setAttribute('aria-expanded', 'false');
       document.body.classList.remove('nav-open');
-      mobileNav.inert = true;
+      mobileNav.setAttribute('inert', '');
       if (restoreFocus) navToggle.focus();
     };
 
