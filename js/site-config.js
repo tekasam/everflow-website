@@ -113,7 +113,7 @@ window.EVERFLOW_CONFIG = {
   }
 
   if (preferredDate) {
-    preferredDate.placeholder = "e.g. Today ASAP, Sep 8, or another preferred date";
+    preferredDate.placeholder = "e.g. Today ASAP or MM/DD/YYYY";
   }
 
   if (frequency) {
