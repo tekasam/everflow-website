@@ -5,6 +5,8 @@ document.documentElement.classList.add('js');
 
 document.addEventListener('DOMContentLoaded', () => {
   const config = window.EVERFLOW_CONFIG || {};
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
 
   /* Inject central contact config wherever it's referenced in markup */
   document.querySelectorAll('[data-config="phone"]').forEach(el => {
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Back to top */
   document.querySelector('.back-to-top')?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: scrollBehavior });
   });
 
   /* Scroll reveal */
@@ -165,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = new FormData(contactForm);
       const lines = [];
       for (const [key, value] of data.entries()) {
-        if (value) lines.push(`${key}: ${value}`);
+        if (value && !key.startsWith('_')) lines.push(`${key}: ${value}`);
       }
       const subject = encodeURIComponent('Delivery Quote Request — Everflow Logistics website');
       const body = encodeURIComponent(lines.join('\n'));
@@ -189,18 +191,21 @@ document.addEventListener('DOMContentLoaded', () => {
           submitBtn.setAttribute('aria-busy', 'true');
           submitBtn.textContent = 'Sending…';
         }
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 15000);
         try {
           const response = await fetch(endpoint, {
             method: 'POST',
             body: new FormData(contactForm),
             headers: { Accept: 'application/json' },
+            signal: controller.signal,
           });
           if (response.ok) {
             successBox?.classList.add('show');
             contactForm.reset();
             successBox?.setAttribute('tabindex', '-1');
             successBox?.focus();
-            successBox?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            successBox?.scrollIntoView({ behavior: scrollBehavior, block: 'center' });
           } else {
             throw new Error('Form service returned an error');
           }
@@ -222,9 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (mailtoLink) mailtoLink.href = buildMailtoFallback();
             errorBox.setAttribute('role', 'alert');
             errorBox.classList.add('show');
-            errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            errorBox.setAttribute('tabindex', '-1');
+            errorBox.focus();
+            errorBox.scrollIntoView({ behavior: scrollBehavior, block: 'center' });
           }
         } finally {
+          window.clearTimeout(timeout);
           isSubmitting = false;
           if (submitBtn) {
             submitBtn.disabled = false;
@@ -247,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const link = fallbackBox.querySelector('a[data-mailto-fallback]');
           if (link) link.href = mailtoLink;
           fallbackBox.classList.add('show');
-          fallbackBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          fallbackBox.scrollIntoView({ behavior: scrollBehavior, block: 'center' });
         }
         window.location.href = mailtoLink;
       });
